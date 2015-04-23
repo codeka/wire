@@ -133,7 +133,7 @@ public class WireCompiler {
     this(new CommandLineOptions(protoPath, outputDirectory, sourceFileNames, roots,  registryClass,
         emitOptions, new LinkedHashSet<String>(enumOptions),
         serviceWriterConstructor == null ? null : serviceWriterConstructor.getName(),
-        serviceWriterOptions, false, false));
+        serviceWriterOptions, false, false, false));
   }
 
   WireCompiler(CommandLineOptions options) throws WireException {
@@ -213,6 +213,8 @@ public class WireCompiler {
   boolean shouldEmitOptions() {
     return options.emitOptions;
   }
+
+  boolean shouldEmitMutableFields() { return options.mutable; }
 
   Set<String> enumOptions() {
     return options.enumOptions;

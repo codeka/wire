@@ -450,8 +450,12 @@ public class MessageWriter {
         writer.emitAnnotation(Deprecated.class);
       }
 
+      EnumSet<Modifier> modifiers = EnumSet.of(PUBLIC);
+      if (!this.compiler.shouldEmitMutableFields()) {
+        modifiers.add(FINAL);
+      }
       if (FieldInfo.isRepeated(field)) javaName = "List<" + javaName + ">";
-      writer.emitField(javaName, sanitize(field.getName()), EnumSet.of(PUBLIC, FINAL));
+      writer.emitField(javaName, sanitize(field.getName()), modifiers);
     }
   }
 

@@ -19,6 +19,7 @@ final class CommandLineOptions {
   public static final String ENUM_OPTIONS_FLAG = "--enum_options=";
   public static final String SERVICE_WRITER_FLAG = "--service_writer=";
   public static final String SERVICE_WRITER_OPT_FLAG = "--service_writer_opt=";
+  public static final String MUTABLE_FLAG = "--mutable";
   public static final String QUIET_FLAG = "--quiet";
   public static final String DRY_RUN_FLAG = "--dry_run";
 
@@ -31,6 +32,7 @@ final class CommandLineOptions {
   final Set<String> enumOptions;
   final String serviceWriter;
   final List<String> serviceWriterOptions;
+  final boolean mutable;
   final boolean quiet;
   final boolean dryRun;
 
@@ -40,6 +42,7 @@ final class CommandLineOptions {
       Set<String> enumOptions,
       String serviceWriter,
       List<String> serviceWriterOptions,
+      boolean mutable,
       boolean quiet,
       boolean dryRun) {
     this.protoPath = protoPath;
@@ -51,6 +54,7 @@ final class CommandLineOptions {
     this.enumOptions = enumOptions;
     this.serviceWriter = serviceWriter;
     this.serviceWriterOptions = serviceWriterOptions;
+    this.mutable = mutable;
     this.quiet = quiet;
     this.dryRun = dryRun;
   }
@@ -65,7 +69,7 @@ final class CommandLineOptions {
    *     [--enum_options=&lt;option_name&gt;[,&lt;option_name&gt;...]]
    *     [--service_writer=&lt;class_name&gt;]
    *     [--service_writer_opt=&lt;value&gt;] [--service_writer_opt=&lt;value&gt;]...]
-   *     [--quiet] [--dry_run]
+   *     [--mutable] [--quiet] [--dry_run]
    *     [file [file...]]
    * </pre>
    *
@@ -92,6 +96,10 @@ final class CommandLineOptions {
    * a public static field for each option used within a particular enum type.
    * </p>
    * <p>
+   * If {@code --mutable} is specified, then generated message classes with have mutable fields,
+   * rather than {@code final} fields.
+   * </p>
+   * <p>
    * If {@code --quiet} is specified, diagnostic messages to stdout are suppressed.
    * </p>
    * <p>
@@ -110,6 +118,7 @@ final class CommandLineOptions {
     String registryClass = null;
     List<String> enumOptionsList = new ArrayList<String>();
     String serviceWriter = null;
+    boolean mutable = false;
     boolean quiet = false;
     boolean dryRun = false;
 
@@ -139,6 +148,8 @@ final class CommandLineOptions {
         serviceWriter = args[index].substring(SERVICE_WRITER_FLAG.length());
       } else if (args[index].startsWith(SERVICE_WRITER_OPT_FLAG)) {
         serviceWriterOptions.add(args[index].substring(SERVICE_WRITER_OPT_FLAG.length()));
+      } else if (args[index].startsWith(MUTABLE_FLAG)) {
+        mutable = true;
       } else if (args[index].startsWith(QUIET_FLAG)) {
         quiet = true;
       } else if (args[index].startsWith(DRY_RUN_FLAG)) {
@@ -158,6 +169,7 @@ final class CommandLineOptions {
     this.enumOptions = new LinkedHashSet<String>(enumOptionsList);
     this.serviceWriter = serviceWriter;
     this.serviceWriterOptions = serviceWriterOptions;
+    this.mutable = mutable;
     this.quiet = quiet;
     this.dryRun = dryRun;
   }
